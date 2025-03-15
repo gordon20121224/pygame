@@ -59,6 +59,15 @@ for col in range(bricks_column):  # 磚塊行數
 ######################顯示文字設定######################
 
 ######################底板設定######################
+paddle_width = 100  # 底板寬度
+paddle_height = 15  # 底板高度
+paddle_color = (255, 255, 255)  # 底板顏色(白色)
+paddle = Brick(
+    (bg_x - paddle_width) // 2, bg_y - 48, paddle_width, paddle_height, paddle_color
+)  # 建立底板物件
+
+######################滑鼠設定######################
+pygame.mouse.set_visible(False)  # 隱藏滑鼠
 
 ######################球設定######################
 
@@ -71,6 +80,19 @@ while True:  # 主程式迴圈
             pygame.quit()  # 關閉pygame
             sys.exit()  # 結束程式
 
+    # 取得滑鼠位置
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    # 計算paddle位置
+    mouse_x = mouse_x - paddle_width // 2
+    # 確保paddle不會超出視窗範圍
+    if mouse_x > bg_x - paddle_width:
+        mouse_x = bg_x - paddle_width
+    elif mouse_x < 0:
+        mouse_x = 0
+    paddle.rect.x = mouse_x
+
+    screen.fill((0, 0, 0))  # 清空畫面
     for brick in bricks:  # 繪製所有磚塊
         brick.draw(screen)  # 繪製磚塊
+    paddle.draw(screen)  # 繪製底板
     pygame.display.update()  # 更新畫面
