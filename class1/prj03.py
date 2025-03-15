@@ -2,11 +2,13 @@
 import pygame
 import sys
 import math
+import random  # 新增random模組
 
 ######################初始化######################
 pygame.init()
 width = 640
 height = 320
+can_draw = False  # 新增控制是否可以畫畫的變數
 ######################建立視窗及物件######################
 # screen(width, height)
 screen = pygame.display.set_mode((width, height))
@@ -32,6 +34,16 @@ pygame.draw.polygon(bg, (0, 0, 0), [(200, 130), (400, 130), (300, 50)], 5)
 pygame.draw.arc(
     bg, (255, 10, 0), [100, 100, 100, 50], math.radians(180), math.radians(0), 2
 )
+
+
+def get_random_color():
+    return (
+        random.randint(0, 255),  # 隨機紅色
+        random.randint(0, 255),  # 隨機綠色
+        random.randint(0, 255),  # 隨機藍色
+    )
+
+
 ######################循環偵測######################
 while True:
     for event in pygame.event.get():
@@ -41,5 +53,12 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             x, y = pygame.mouse.get_pos()  # 獲取滑鼠位置
             print(f"mouse position: {x}, {y}")
+            can_draw = not can_draw  # 切換畫畫模式
+
+        if event.type == pygame.MOUSEMOTION and can_draw:
+            x, y = pygame.mouse.get_pos()
+            # 在滑鼠位置畫一個小圓點，使用隨機顏色
+            pygame.draw.circle(bg, get_random_color(), (x, y), 4, 0)
+
     screen.blit(bg, (0, 0))
     pygame.display.update()
